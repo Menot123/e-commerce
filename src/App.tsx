@@ -9,6 +9,7 @@ import UserHeader from './components/Header/UserHeader';
 import UserFooter from './components/Footer/UserFooter';
 import AdminHeader from './components/Header/AdminHeader';
 import AdminFooter from './components/Footer/AdminFooter';
+import { message } from 'antd';
 
 const UserLayout: React.FC = () => (
   <div>
@@ -29,11 +30,21 @@ const AdminLayout: React.FC = () => (
 const App: React.FC = () => {
   const originalPath: string = import.meta.env.VITE_ORIGINAL_PATH as string;
 
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const toastAlert = (type: any, content: any) => {
+    messageApi.open({
+      type: type,
+      content: content,
+    });
+  };
+
   return (
     <>
+      {contextHolder}
       <Routes>
         {/* Login */}
-        <Route path={`${originalPath}/login`} element={<Login />} />
+        <Route path={`${originalPath}/login`} element={<Login toastAlert={toastAlert} />} />
 
         {/* User Route */}
         <Route path={`${originalPath}/`} element={<UserLayout />}>

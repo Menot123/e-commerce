@@ -1,12 +1,21 @@
 import React from 'react';
 import './UserFooter.css';
 
-const UserFooter: React.FC = () => {
-    return (
-        <div>
-            <h2>UserFooter</h2>
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
 
-        </div>
+const { Header, Content, Footer } = Layout;
+
+const UserFooter: React.FC = () => {
+    const items = new Array(3).fill(null).map((_, index) => ({
+        key: index + 1,
+        label: `nav ${index + 1}`,
+    }));
+    return (
+        <Layout>
+            <Footer style={{ textAlign: 'center' }}>
+                E-Commerce APP ©{new Date().getFullYear()} Created by me
+            </Footer>
+        </Layout>
     );
 };
 
