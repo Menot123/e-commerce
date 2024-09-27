@@ -3,9 +3,10 @@ import './Login.css';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { ComponentProps } from '../props/ComponentProps';
 // import loginBackground from '/login-background.jpg'
 
-const Login: React.FC = (props) => {
+const Login: React.FC<ComponentProps> = (props) => {
     const originalPath: string = import.meta.env.VITE_ORIGINAL_PATH as string;
 
     const navigate = useNavigate();

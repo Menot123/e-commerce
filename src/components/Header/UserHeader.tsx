@@ -1,10 +1,11 @@
 import React from 'react';
 import './UserHeader.css';
 
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import loginBackground from '/login-background.jpg'
 
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 
 const navItems: any = ["Sản phẩm", "Giỏ hàng", "Dăng nhập"]
 
@@ -16,9 +17,9 @@ const items = new Array(3).fill(null).map((_, index) => ({
 const UserHeader: React.FC = () => {
     const originalPath: string = import.meta.env.VITE_ORIGINAL_PATH as string;
     const navigate = useNavigate();
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
+    // const {
+    //     token: { colorBgContainer, borderRadiusLG },
+    // } = theme.useToken();
 
     const backToLogin = () => {
         navigate(`${originalPath}/login`)
@@ -27,7 +28,7 @@ const UserHeader: React.FC = () => {
     return (
         <Layout>
             <Header style={{ display: 'flex', alignItems: 'center' }}>
-                <img src="../e-commerce/login-background.jpg" alt="Logo" className="store-logo" style={{ height: 50, marginRight: 20 }} />
+                <img src={loginBackground} alt="Logo" className="store-logo" style={{ height: 50, marginRight: 20 }} />
                 <Menu
                     theme="dark"
                     mode="horizontal"
