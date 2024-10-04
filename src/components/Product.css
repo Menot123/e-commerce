@@ -1,10 +1,6 @@
-.home-container {
+.product-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    img {
-        max-width: 90%;
-        max-height: 90%;
-    }
 }

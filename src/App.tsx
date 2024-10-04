@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import './App.css'
 import Home from './components/Home'
+import Product from './components/Product'
 import Login from './components/Login'
 import AdminHome from './components/Admin/AdminHome'
 import UserHeader from './components/Header/UserHeader';
@@ -49,6 +50,7 @@ const App: React.FC = () => {
         {/* User Route */}
         <Route path={`${originalPath}/`} element={<UserLayout />}>
           <Route index element={<Home />} />
+          <Route path={`${originalPath}/products`} element={<Product />} />
         </Route>
 
         {/* Admin Route */}

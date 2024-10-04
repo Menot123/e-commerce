@@ -21,21 +21,36 @@ const UserHeader: React.FC = () => {
     //     token: { colorBgContainer, borderRadiusLG },
     // } = theme.useToken();
 
-    const backToLogin = () => {
-        navigate(`${originalPath}/login`)
+    const navigateToPage = (element: any) => {
+        // San pham
+        if (element.key == 1) {
+            navigate(`${originalPath}/products`)
+        }
+        // Gio hang
+        if (element.key == 2) {
+
+        }
+        // Dang nhap
+        if (element.key == 3) {
+            navigate(`${originalPath}/login`)
+        }
+    }
+
+    const backToHome = () => {
+        navigate(`${originalPath}/`)
     }
 
     return (
         <Layout>
             <Header style={{ display: 'flex', alignItems: 'center' }}>
-                <img src={loginBackground} alt="Logo" className="store-logo" style={{ height: 50, marginRight: 20 }} />
+                <img onClick={backToHome} src={loginBackground} alt="Logo" className="store-logo" style={{ height: 50, marginRight: 20 }} />
                 <Menu
                     theme="dark"
                     mode="horizontal"
                     defaultSelectedKeys={['0']}
                     items={items}
                     style={{ flex: 1, minWidth: 0 }}
-                    onClick={backToLogin}
+                    onClick={navigateToPage}
                 />
             </Header>
             {/* <Content style={{ padding: '0 48px' }}>
