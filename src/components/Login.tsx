@@ -1,23 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Login.css';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ComponentProps } from '../props/ComponentProps';
-// import loginBackground from '/login-background.jpg'
+import Cookies from 'js-cookie';
 
 const Login: React.FC<ComponentProps> = (props) => {
+
+
     const originalPath: string = import.meta.env.VITE_ORIGINAL_PATH as string;
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (Cookies.get('isLoggedIn') === 'true') {
+            if (Cookies.get('role') === 'admin') {
+                navigate(`${originalPath}/admin`);
+            }
+            else {
+                navigate(`${originalPath}/`);
+            }
+        }
+    }, []);
+
     const onFinish = (values: any) => {
         if (values.username === 'admin' && values.password === 'admin') {
             props.toastAlert('success', "Đăng nhập thành công tài khoản admin")
+            Cookies.set('isLoggedIn', 'true', { expires: 7 }); // 7 days
+            Cookies.set('role', 'admin', { expires: 7 }); // 7 days
+            Cookies.set('name', 'Admin', { expires: 7 }); // 7 days
             navigate(`${originalPath}/admin`);
         }
         else if (values.username === 'customer' && values.password === 'customer') {
             props.toastAlert('success', "Đăng nhập thành công tài khoản khách")
+            Cookies.set('isLoggedIn', 'true', { expires: 7 }); // 7 days
+            Cookies.set('role', 'customer', { expires: 7 }); // 7 days
+            Cookies.set('name', 'Người dùng', { expires: 7 }); // 7 days
             navigate(`${originalPath}/`);
         }
         else {
