@@ -53,7 +53,7 @@ const Cart: React.FC = () => {
             title: "STT",
             dataIndex: "id",
             key: "id",
-            render: (text: number, record: CartItem, index: number) => index + 1,
+            render: (index: number) => index,
         },
         {
             title: "Hình ảnh",
@@ -87,7 +87,7 @@ const Cart: React.FC = () => {
         {
             title: "Thành tiền",
             key: "total",
-            render: (text: string, record: CartItem) => {
+            render: (record: CartItem) => {
                 const itemTotal = record.price * record.quantity;
                 return `${itemTotal.toLocaleString()} VND`;
             },
@@ -95,7 +95,7 @@ const Cart: React.FC = () => {
         {
             title: "Hành động",
             key: "action",
-            render: (text: string, record: CartItem) => (
+            render: (record: CartItem) => (
                 <Space size="middle">
                     <Button
                         icon={<DeleteOutlined />}
