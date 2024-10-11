@@ -1,8 +1,8 @@
 import React from 'react';
-import './AdminHome.css';
+import './ProductManagement.css';
 import loginBackground from '/login-background.jpg'
 
-const AdminHome: React.FC = () => {
+const ProductManagement: React.FC = () => {
     return (
         <div className='admin-container'>
             <img src={loginBackground} alt="Admin Background" />
@@ -10,4 +10,4 @@ const AdminHome: React.FC = () => {
     );
 };
 
-export default AdminHome;
+export default ProductManagement;

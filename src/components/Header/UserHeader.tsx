@@ -28,9 +28,6 @@ const UserHeader: React.FC = () => {
 
     const originalPath: string = import.meta.env.VITE_ORIGINAL_PATH as string;
     const navigate = useNavigate();
-    // const {
-    //     token: { colorBgContainer, borderRadiusLG },
-    // } = theme.useToken();
 
     const navigateToPage = (element: any) => {
         // San pham
@@ -39,7 +36,7 @@ const UserHeader: React.FC = () => {
         }
         // Gio hang
         if (element.key == 2) {
-
+            navigate(`${originalPath}/cart`)
         }
         // Dang nhap
         if (element.key == 3) {

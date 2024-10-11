@@ -1,12 +1,17 @@
 import React from 'react';
 import './AdminFooter.css';
 
+import { Layout } from 'antd';
+
+const { Footer } = Layout;
+
 const AdminFooter: React.FC = () => {
     return (
-        <div>
-            <h2>AdminFooter</h2>
-
-        </div>
+        <Layout>
+            <Footer style={{ textAlign: 'center' }}>
+                E-Commerce APP ©{new Date().getFullYear()} Created by me
+            </Footer>
+        </Layout>
     );
 };
 

@@ -4,8 +4,10 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import './App.css'
 import Home from './components/Home'
 import Product from './components/Product'
+import Cart from './components/Cart'
 import Login from './components/Login'
 import AdminHome from './components/Admin/AdminHome'
+import ProductManagement from './components/Admin/ProductManagement';
 import UserHeader from './components/Header/UserHeader';
 import UserFooter from './components/Footer/UserFooter';
 import AdminHeader from './components/Header/AdminHeader';
@@ -51,11 +53,14 @@ const App: React.FC = () => {
         <Route path={`${originalPath}/`} element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path={`${originalPath}/products`} element={<Product />} />
+          <Route path={`${originalPath}/cart`} element={<Cart />} />
         </Route>
 
         {/* Admin Route */}
         <Route path={`${originalPath}/admin`} element={<AdminLayout />}>
           <Route index element={<AdminHome />} />
+          <Route path={`${originalPath}/admin/product-management`} element={< ProductManagement />} />
+
         </Route>
 
         {/* <Route path={`${originalPath}/`} element={<Home />} />
