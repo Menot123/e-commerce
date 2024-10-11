@@ -138,7 +138,7 @@ const Cart: React.FC = () => {
                 </Button>
             </div>
 
-            <Modal visible={modalVisible} onCancel={handleCloseModal} footer={null}>
+            <Modal open={modalVisible} onCancel={handleCloseModal} footer={null}>
                 <img src={modalImage} alt="product" style={{ width: "100%" }} />
             </Modal>
         </div>

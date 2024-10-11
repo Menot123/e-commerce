@@ -68,7 +68,7 @@ const ProductManagement: React.FC = () => {
 
     const handleDelete = (id: number) => {
         setProducts(products.filter((product) => product.id !== id));
-        message.success("Product deleted successfully!");
+        message.success("Xóa sản phẩm thành công!");
     };
 
     const handleCancel = () => {
@@ -83,14 +83,14 @@ const ProductManagement: React.FC = () => {
                         product.id === selectedProduct.id ? { ...selectedProduct, ...values } : product
                     )
                 );
-                message.success("Product updated successfully!");
+                message.success("Cập nhật sản phẩm thành công!");
             } else {
                 const newProduct = {
                     id: Math.max(...products.map((p) => p.id)) + 1,
                     ...values,
                 };
                 setProducts([...products, newProduct]);
-                message.success("Product added successfully!");
+                message.success("Thêm sản phẩm thành công!");
             }
             setIsModalVisible(false);
         });

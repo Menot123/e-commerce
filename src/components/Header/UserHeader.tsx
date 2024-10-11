@@ -17,10 +17,14 @@ const { Header } = Layout;
 const UserHeader: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [loggedName, setLoggedName] = useState<string>('');
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     useEffect(() => {
         if (Cookies.get('isLoggedIn') === 'true') {
             const storedLoggedName = String(Cookies.get('name'));
+            if (String(Cookies.get('role')) === 'admin') {
+                setIsAdmin(true);
+            }
             setIsLoggedIn(true)
             setLoggedName(storedLoggedName);
         }
@@ -51,6 +55,10 @@ const UserHeader: React.FC = () => {
             setLoggedName('')
             navigate(`${originalPath}/`)
         }
+        // Admin Page
+        if (element.key == 5) {
+            navigate(`${originalPath}/admin`)
+        }
     }
 
     const backToHome = () => {
@@ -64,26 +72,53 @@ const UserHeader: React.FC = () => {
                 {
                     isLoggedIn
                         ?
-                        <Menu
-                            theme="dark"
-                            mode="horizontal"
-                            defaultSelectedKeys={['0']}
-                            items={[
-                                { key: 1, label: "Sản phẩm" },
-                                { key: 2, label: "Giỏ hàng" },
-                                {
-                                    key: 3, label: loggedName,
-                                    children: [
-                                        {
-                                            key: 4,
-                                            label: 'Đăng xuất'
-                                        },
-                                    ],
-                                }
-                            ]}
-                            style={{ flex: 1, minWidth: 0 }}
-                            onClick={navigateToPage}
-                        />
+                        isAdmin
+                            ?
+                            <Menu
+                                theme="dark"
+                                mode="horizontal"
+                                defaultSelectedKeys={['0']}
+                                items={[
+                                    { key: 1, label: "Sản phẩm" },
+                                    { key: 2, label: "Giỏ hàng" },
+                                    {
+                                        key: 3, label: loggedName,
+                                        children: [
+                                            {
+                                                key: 5,
+                                                label: 'Trang Admin'
+                                            },
+                                            {
+                                                key: 4,
+                                                label: 'Đăng xuất'
+                                            },
+                                        ]
+                                    }
+                                ]}
+                                style={{ flex: 1, minWidth: 0 }}
+                                onClick={navigateToPage}
+                            />
+                            :
+                            <Menu
+                                theme="dark"
+                                mode="horizontal"
+                                defaultSelectedKeys={['0']}
+                                items={[
+                                    { key: 1, label: "Sản phẩm" },
+                                    { key: 2, label: "Giỏ hàng" },
+                                    {
+                                        key: 3, label: loggedName,
+                                        children: [
+                                            {
+                                                key: 4,
+                                                label: 'Đăng xuất'
+                                            },
+                                        ],
+                                    }
+                                ]}
+                                style={{ flex: 1, minWidth: 0 }}
+                                onClick={navigateToPage}
+                            />
                         :
                         <Menu
                             theme="dark"

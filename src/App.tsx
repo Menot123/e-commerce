@@ -2,6 +2,7 @@
 import React from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import './App.css'
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Home from './components/Home'
 import Product from './components/Product'
 import Cart from './components/Cart'
@@ -53,18 +54,19 @@ const App: React.FC = () => {
         <Route path={`${originalPath}/`} element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path={`${originalPath}/products`} element={<Product />} />
-          <Route path={`${originalPath}/cart`} element={<Cart />} />
+          <Route element={<PrivateRoute allowedRoles={['customer', 'admin']} redirectPath={`${originalPath}/login`} />}>
+            <Route path={`${originalPath}/cart`} element={<Cart />} />
+          </Route>
         </Route>
 
         {/* Admin Route */}
-        <Route path={`${originalPath}/admin`} element={<AdminLayout />}>
-          <Route index element={<AdminHome />} />
-          <Route path={`${originalPath}/admin/product-management`} element={< ProductManagement />} />
-
+        <Route element={<PrivateRoute allowedRoles={['admin']} redirectPath={`${originalPath}/login`} />}>
+          <Route path={`${originalPath}/admin`} element={<AdminLayout />}>
+            <Route index element={<AdminHome />} />
+            <Route path={`${originalPath}/admin/product-management`} element={< ProductManagement />} />
+            <Route path={`${originalPath}/admin/type-management`} element="This is Type Management" />
+          </Route>
         </Route>
-
-        {/* <Route path={`${originalPath}/`} element={<Home />} />
-        <Route path={`${originalPath}/admin`} element={<AdminHome />} /> */}
       </Routes>
     </>
   )
