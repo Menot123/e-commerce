@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './ProductManagement.css';
+import './TypeManagement.css';
 // import loginBackground from '/login-background.jpg'
 import axios from "axios";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-// import { render } from 'react-dom';
 
 type Category = {
     id: number;
@@ -14,29 +13,17 @@ type Category = {
     updatedAt: Date;
 };
 
-interface Product {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    images: string[];
-    creationAt: Date;
-    updatedAt: Date;
-    category: Category;
-}
 
-// const { Option } = Select;
+const TypeManagement: React.FC = () => {
 
-const ProductManagement: React.FC = () => {
+    const categoriesAPI: string = import.meta.env.VITE_CATEGORY_API as string;
 
-    const productsAPI: string = import.meta.env.VITE_PRODUCT_API as string;
-
-    // const [products, setProducts] = useState<Product[]>([
+    // const [categories, setCategories] = useState<category[]>([
     //     {
     //         id: 1,
     //         images: ["https://m.media-amazon.com/images/I/719baS3kW5L._AC_SX569_.jpg"],
-    //         title: "Sản phẩm 1",
-    //         description: "Mô tả cho sản phẩm 1",
+    //         title: "loại sản phẩm 1",
+    //         description: "Mô tả cho loại sản phẩm 1",
     //         price: 100,
     //         category: {
     //             id: 1,
@@ -49,52 +36,45 @@ const ProductManagement: React.FC = () => {
     //         updatedAt: new Date(),
     //     }
     // ]);
-    const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [pageSize, setPageSize] = useState(5);
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchcategories = async () => {
             try {
-                const response = await axios.get<Product[]>(productsAPI);
-                setProducts(response.data);
+                const response = await axios.get<Category[]>(categoriesAPI);
+                setCategories(response.data);
             } catch (err) {
                 console.log('Có lỗi xảy ra khi tải dữ liệu');
             }
         };
 
-        fetchProducts();
+        fetchcategories();
     }, []);
-
-    const getFirstImageUrl = (images: string[]): string => {
-        if (images.length == 1) return images[0].slice(2, -2);
-        if (images.length > 1) return images[0]
-        else return 'none';
-
-    };
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
     const [form] = Form.useForm();
 
     const showAddModal = () => {
         form.resetFields();
-        setSelectedProduct(null);
+        setSelectedCategory(null);
         setIsEditMode(false);
         setIsModalVisible(true);
     };
 
-    const showEditModal = (product: Product) => {
-        setSelectedProduct(product);
+    const showEditModal = (category: Category) => {
+        setSelectedCategory(category);
         setIsEditMode(true);
         setIsModalVisible(true);
-        form.setFieldsValue(product);
+        form.setFieldsValue(category);
     };
 
     const handleDelete = (id: number) => {
-        setProducts(products.filter((product) => product.id !== id));
-        message.success("Xóa sản phẩm thành công!");
+        setCategories(categories.filter((category) => category.id !== id));
+        message.success("Xóa loại sản phẩm thành công!");
     };
 
     const handleCancel = () => {
@@ -103,20 +83,20 @@ const ProductManagement: React.FC = () => {
 
     const handleSave = () => {
         form.validateFields().then((values) => {
-            if (isEditMode && selectedProduct) {
-                setProducts(
-                    products.map((product) =>
-                        product.id === selectedProduct.id ? { ...selectedProduct, ...values } : product
+            if (isEditMode && selectedCategory) {
+                setCategories(
+                    categories.map((category) =>
+                        category.id === selectedCategory.id ? { ...selectedCategory, ...values } : category
                     )
                 );
-                message.success("Cập nhật sản phẩm thành công!");
+                message.success("Cập nhật loại sản phẩm thành công!");
             } else {
-                const newProduct = {
-                    id: Math.max(...products.map((p) => p.id)) + 1,
+                const newcategory = {
+                    id: Math.max(...categories.map((p) => p.id)) + 1,
                     ...values,
                 };
-                setProducts([...products, newProduct]);
-                message.success("Thêm sản phẩm thành công!");
+                setCategories([...categories, newcategory]);
+                message.success("Thêm loại sản phẩm thành công!");
             }
             setIsModalVisible(false);
         });
@@ -137,35 +117,19 @@ const ProductManagement: React.FC = () => {
         },
         {
             title: "Ảnh",
-            dataIndex: "images",
-            key: "images",
-            render: (text: string[]) => <img src={getFirstImageUrl(text)} alt="product" style={{ width: 50 }} />,
+            dataIndex: "image",
+            key: "image",
+            render: (text: string) => <img src={text} alt="category" style={{ width: 50 }} />,
         },
         {
-            title: "Tên sản phẩm",
-            dataIndex: "title",
-            key: "title",
-        },
-        {
-            title: "Mô tả",
-            dataIndex: "description",
-            key: "description",
-        },
-        {
-            title: "Đơn giá",
-            dataIndex: "price",
-            key: "price",
-        },
-        {
-            title: "Loại sản phẩm",
-            dataIndex: "category",
-            key: "category",
-            render: (element: Category) => element.name,
+            title: "Tên loại sản phẩm",
+            dataIndex: "name",
+            key: "name",
         },
         {
             title: "Hành động",
             key: "actions",
-            render: (_: any, record: Product) => (
+            render: (_: any, record: Category) => (
                 <Space size="middle">
                     <Button
                         type="primary"
@@ -188,21 +152,21 @@ const ProductManagement: React.FC = () => {
     ];
 
     return (
-        <div className='product-manage-container'>
+        <div className='category-manage-container'>
             <Button
                 type="primary"
                 icon={<PlusOutlined />}
                 onClick={showAddModal}
                 style={{ marginBottom: 16 }}
             >
-                Thêm sản phẩm
+                Thêm loại sản phẩm
             </Button>
             <Table
                 columns={columns}
-                dataSource={products}
+                dataSource={categories}
                 pagination={{
                     pageSize: pageSize,
-                    total: products.length,
+                    total: categories.length,
                     onChange: (page: number, pageSize: number) => paginationChange(page, pageSize),
                     showSizeChanger: true,
                     pageSizeOptions: ["5", "10", "20", "50", "100"],
@@ -210,7 +174,7 @@ const ProductManagement: React.FC = () => {
                 rowKey="id" />
 
             <Modal
-                title={isEditMode ? "Cập nhật thông tin sản phẩm" : "Thêm sản phẩm"}
+                title={isEditMode ? "Cập nhật thông tin loại loại sản phẩm" : "Thêm loại loại sản phẩm"}
                 open={isModalVisible}
                 onCancel={handleCancel}
                 onOk={handleSave}
@@ -220,39 +184,18 @@ const ProductManagement: React.FC = () => {
                         <Input disabled={true} />
                     </Form.Item>
                     <Form.Item
-                        label="URL ảnh sản phẩm"
-                        name="images"
+                        label="URL ảnh loại sản phẩm"
+                        name="image"
                         rules={[{ required: true, message: "Vui lòng nhập url hình ảnh!" }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Tên sản phẩm"
-                        name="title"
-                        rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
+                        label="Tên loại sản phẩm"
+                        name="name"
+                        rules={[{ required: true, message: "Vui lòng nhập tên loại sản phẩm!" }]}
                     >
                         <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Mô tả"
-                        name="description"
-                        rules={[{ required: true, message: "Vui lòng nhập mô tả sản phẩm!" }]}
-                    >
-                        <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item
-                        label="Đơn giá"
-                        name="price"
-                        rules={[{ required: true, message: "Vui lòng nhập giá tiền sản phẩm!" }]}
-                    >
-                        <Input type="number" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Loại sản phẩm"
-                        name="category"
-                        rules={[{ required: true, message: "Vui lòng chọn nhập loại sản phẩm!" }]}
-                    >
-                        <Input type="text" />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -260,4 +203,4 @@ const ProductManagement: React.FC = () => {
     );
 };
 
-export default ProductManagement;
+export default TypeManagement;

@@ -21,7 +21,7 @@ type Product = {
     images: string[];
     creationAt: Date;
     updatedAt: Date;
-    category: Category[];
+    category: Category;
 };
 
 interface CartItem {
@@ -63,7 +63,7 @@ interface CartItem {
 
 const Product: React.FC = () => {
 
-    // const productsAPI: string = import.meta.env.VITE_PRODUCT_API as string;
+    const productsAPI: string = import.meta.env.VITE_PRODUCT_API as string;
 
     const getFirstImageUrl = (images: string[]): string => {
         if (images.length == 1) return images[0].slice(2, -2);
@@ -77,12 +77,12 @@ const Product: React.FC = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 18; // Số lượng sản phẩm trên mỗi trang
+    const [pageSize, setPageSize] = useState(18);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get<Product[]>('https://api.escuelajs.co/api/v1/products');
+                const response = await axios.get<Product[]>(productsAPI);
                 setProducts(response.data);
             } catch (err) {
                 setError('Có lỗi xảy ra khi tải dữ liệu');
@@ -104,6 +104,13 @@ const Product: React.FC = () => {
         (currentPage - 1) * pageSize,
         currentPage * pageSize
     );
+
+    const paginationChange = (page: number, pageSize?: number) => {
+        setCurrentPage(page);
+        if (pageSize) {
+            setPageSize(pageSize); // Cập nhật kích thước trang nếu có
+        }
+    };
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
@@ -189,7 +196,8 @@ const Product: React.FC = () => {
                     current={currentPage}
                     pageSize={pageSize}
                     total={filteredProducts.length}
-                    onChange={(page) => setCurrentPage(page)}
+                    onChange={(page, pageSize) => paginationChange(page, pageSize)}
+                    pageSizeOptions={['12', '18', '36', '60']}
                 />
             </div>
         </div>

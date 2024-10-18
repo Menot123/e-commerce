@@ -9,6 +9,7 @@ import Cart from './components/Cart'
 import Login from './components/Login'
 import AdminHome from './components/Admin/AdminHome'
 import ProductManagement from './components/Admin/ProductManagement';
+import TypeManagement from './components/Admin/TypeManagement';
 import UserHeader from './components/Header/UserHeader';
 import UserFooter from './components/Footer/UserFooter';
 import AdminHeader from './components/Header/AdminHeader';
@@ -64,7 +65,7 @@ const App: React.FC = () => {
           <Route path={`${originalPath}/admin`} element={<AdminLayout />}>
             <Route index element={<AdminHome />} />
             <Route path={`${originalPath}/admin/product-management`} element={< ProductManagement />} />
-            <Route path={`${originalPath}/admin/type-management`} element="This is Type Management" />
+            <Route path={`${originalPath}/admin/type-management`} element={< TypeManagement />} />
           </Route>
         </Route>
       </Routes>
