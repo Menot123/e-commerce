@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { Table, InputNumber, Button, Space, Typography, message, Modal } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import Cookies from 'js-cookie';
 
 const { Title } = Typography;
 
@@ -13,10 +14,25 @@ interface CartItem {
 }
 
 const Cart: React.FC = () => {
-    const [cartItems, setCartItems] = useState<CartItem[]>([
-        { id: 1, image: "https://m.media-amazon.com/images/I/719baS3kW5L._AC_SX569_.jpg", name: "Sản phẩm A", price: 100000, quantity: 2 },
-        { id: 2, image: "https://m.media-amazon.com/images/I/719baS3kW5L._AC_SX569_.jpg", name: "Sản phẩm B", price: 200000, quantity: 1 },
-    ])
+    // const [cartItems, setCartItems] = useState<CartItem[]>([
+    //     { id: 1, image: "https://m.media-amazon.com/images/I/719baS3kW5L._AC_SX569_.jpg", name: "Sản phẩm A", price: 100000, quantity: 2 },
+    //     { id: 2, image: "https://m.media-amazon.com/images/I/719baS3kW5L._AC_SX569_.jpg", name: "Sản phẩm B", price: 200000, quantity: 1 },
+    // ])
+    const [cartItems, setCartItems] = useState<CartItem[]>([])
+
+    useEffect(() => {
+        const loadCart = () => {
+            let cart: CartItem[] = JSON.parse(Cookies.get('cart') || '[]');
+            if (cart.length > 0) {
+                setCartItems(cart);
+            }
+            else {
+
+            }
+        };
+
+        loadCart();
+    }, []);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalImage, setModalImage] = useState("");
@@ -31,11 +47,27 @@ const Cart: React.FC = () => {
     };
 
     const handleDeleteItem = (id: number) => {
+        let cart: CartItem[] = JSON.parse(Cookies.get('cart') || '[]');
+        cart = cart.filter(item => item.id !== id);
+        Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
+
         setCartItems((prev) => prev.filter((item) => item.id !== id));
+
         message.success("Đã xóa sản phẩm khỏi giỏ hàng.");
     };
 
     const handleQuantityChange = (id: number, quantity: number) => {
+        let cart: CartItem[] = JSON.parse(Cookies.get('cart') || '[]');
+        const existingProduct = cart.find(item => item.id === id);
+        if (existingProduct) {
+            if (quantity <= 0) {
+                handleDeleteItem(id);
+            } else {
+                existingProduct.quantity = quantity;
+                Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
+                console.log(Cookies.get('cart'));
+            }
+        }
         setCartItems((prev) =>
             prev.map((item) =>
                 item.id === id ? { ...item, quantity: quantity } : item
@@ -51,9 +83,7 @@ const Cart: React.FC = () => {
     const columns = [
         {
             title: "STT",
-            dataIndex: "id",
-            key: "id",
-            render: (index: number) => index,
+            render: (_: any, __: any, index: number) => index + 1,
         },
         {
             title: "Hình ảnh",
@@ -70,7 +100,7 @@ const Cart: React.FC = () => {
             title: "Đơn giá",
             dataIndex: "price",
             key: "price",
-            render: (price: number) => `${price.toLocaleString()} VND`,
+            render: (price: number) => `$${price.toLocaleString()}`,
         },
         {
             title: "Số lượng",
@@ -78,7 +108,7 @@ const Cart: React.FC = () => {
             key: "quantity",
             render: (quantity: number, record: CartItem) => (
                 <InputNumber
-                    min={1}
+                    // min={1}
                     value={quantity}
                     onChange={(value) => handleQuantityChange(record.id, value ?? 1)}
                 />
@@ -89,7 +119,7 @@ const Cart: React.FC = () => {
             key: "total",
             render: (record: CartItem) => {
                 const itemTotal = record.price * record.quantity;
-                return `${itemTotal.toLocaleString()} VND`;
+                return `$${itemTotal.toLocaleString()}`;
             },
         },
         {
@@ -123,10 +153,13 @@ const Cart: React.FC = () => {
                 summary={() => (
                     <Table.Summary.Row>
                         <Table.Summary.Cell index={0} colSpan={4}>
+
+                        </Table.Summary.Cell>
+                        <Table.Summary.Cell index={0} colSpan={1}>
                             <strong>Tổng số tiền:</strong>
                         </Table.Summary.Cell>
                         <Table.Summary.Cell index={1}>
-                            <strong>{totalAmount.toLocaleString()} VND</strong>
+                            <strong>${totalAmount.toLocaleString()}</strong>
                         </Table.Summary.Cell>
                     </Table.Summary.Row>
                 )}

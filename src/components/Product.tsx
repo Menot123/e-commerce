@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './Product.css';
 import axios from "axios";
-import { Card, Col, Row, Button, Input, Pagination } from 'antd';
+import { Card, Col, Row, Button, Input, Pagination, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
+import Cookies from 'js-cookie';
 
 type Category = {
     id: number;
@@ -22,6 +23,14 @@ type Product = {
     updatedAt: Date;
     category: Category[];
 };
+
+interface CartItem {
+    id: number;
+    image: string;
+    name: string;
+    price: number;
+    quantity: number;
+}
 
 
 // const products = [
@@ -64,7 +73,6 @@ const Product: React.FC = () => {
     };
 
     const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -78,16 +86,11 @@ const Product: React.FC = () => {
                 setProducts(response.data);
             } catch (err) {
                 setError('Có lỗi xảy ra khi tải dữ liệu');
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchProducts();
     }, []);
-    if (loading) {
-        return <div>Đang tải...</div>;
-    }
 
     if (error) {
         return <div>{error}</div>;
@@ -107,8 +110,31 @@ const Product: React.FC = () => {
         setCurrentPage(1);
     };
 
-    const handleAddToCart = (productId: number) => {
-        console.log(`Added product ${productId} to cart`);
+    const handleAddToCart = (product: Product) => {
+
+
+        // Lấy giỏ hàng từ cookie, nếu không có thì khởi tạo là mảng rỗng
+        let cart: CartItem[] = JSON.parse(Cookies.get('cart') || '[]');
+        // Kiểm tra xem sản phẩm đã có trong giỏ chưa
+        const existingProduct = cart.find(item => item.id === product.id);
+
+        if (existingProduct) {
+            // Nếu sản phẩm đã có, tăng quantity
+            existingProduct.quantity += 1;
+        } else {
+            // Nếu sản phẩm chưa có, thêm mới vào giỏ
+            cart.push({
+                id: product.id,
+                image: getFirstImageUrl(product.images),
+                name: product.title,
+                price: product.price,
+                quantity: 1
+            });
+        }
+        // Lưu lại giỏ hàng vào cookie
+        Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
+        message.success("Thêm sản phẩm thành công.");
+        // console.log(Cookies.get('cart'));
     };
 
     return (
@@ -135,7 +161,7 @@ const Product: React.FC = () => {
                                 <Button
                                     type="primary"
                                     icon={<ShoppingCartOutlined />}
-                                    onClick={() => handleAddToCart(product.id)}
+                                    onClick={() => handleAddToCart(product)}
                                 >
                                     Thêm
                                 </Button>,

@@ -40,6 +40,7 @@ const AdminHeader: React.FC = () => {
             Cookies.remove('isLoggedIn');
             Cookies.remove('name');
             Cookies.remove('role');
+            Cookies.remove('cart');
             // setIsLoggedIn(false)
             navigate(`${originalPath}/login`)
         }
